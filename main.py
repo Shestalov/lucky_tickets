@@ -48,6 +48,7 @@ if __name__ == '__main__':
     logging.info("Main: before running thread")
     beginning_time = time.time()
     print(f"Begin threads {beginning_time}")
+
     # thread1.start()
     # thread2.start()
     # thread3.start()
