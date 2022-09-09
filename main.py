@@ -2,7 +2,7 @@ import logging
 import threading
 import time
 from multiprocessing import Process, current_process, Queue
-import multiprocessing
+
 
 tickets_1 = ["000000", "250000"]
 tickets_2 = ["250001", "500000"]
@@ -13,7 +13,7 @@ tickets_4 = ["750001", "999999"]
 total_tickets_th = 0
 
 
-# # for mp
+# for mp
 # queue = Queue()
 
 def check_ticket(ticket):
@@ -34,10 +34,9 @@ def check_ticket(ticket):
 
     # for th
     logging.info("Thread %s: finishing", threading.currentThread().name)
-    print(f"{threading.currentThread().name} - {lucky} tickets")
 
     # # for mp
-    # print(f"{current_process().name} finishing - {lucky} tickets")
+    # print(f"{current_process().name} finishing")
 
     # for th
     global total_tickets_th
@@ -47,21 +46,23 @@ def check_ticket(ticket):
     # queue.put(lucky)
 
 
+
 if __name__ == '__main__':
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
 
-    logging.info("Main: before creating thread/process")
+    logging.info("Main: before creating thread")
 
     thread1 = threading.Thread(target=check_ticket, args=(tickets_1,))
     thread2 = threading.Thread(target=check_ticket, args=(tickets_2,))
     thread3 = threading.Thread(target=check_ticket, args=(tickets_3,))
     thread4 = threading.Thread(target=check_ticket, args=(tickets_4,))
 
-    # process1 = Process(target=check_ticket(tickets_1), args=(1,))
-    # process2 = Process(target=check_ticket(tickets_2), args=(1,))
-    # process3 = Process(target=check_ticket(tickets_3), args=(1,))
-    # process4 = Process(target=check_ticket(tickets_4), args=(1,))
+    # logging.info("Main: before creating process")
+    # process1 = Process(target=check_ticket, args=(tickets_1,))
+    # process2 = Process(target=check_ticket, args=(tickets_2,))
+    # process3 = Process(target=check_ticket, args=(tickets_3,))
+    # process4 = Process(target=check_ticket, args=(tickets_4,))
 
     logging.info("Main: before running thread/process")
     beginning_time = time.time()
