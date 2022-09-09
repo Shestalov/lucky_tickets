@@ -1,7 +1,8 @@
 import logging
 import threading
 import time
-from multiprocessing import Process
+from multiprocessing import Process, current_process
+import multiprocessing
 
 tickets_1 = ["000000", "250000"]
 tickets_2 = ["250001", "500000"]
@@ -15,16 +16,18 @@ def check_ticket(ticket):
     start = ticket[0]
     end = ticket[1]
     lucky = 0
-    logging.info("Thread %s: starting", threading.currentThread().name)
+
+    # logging.info("Thread %s: starting", threading.currentThread().name)
+    print(f"{current_process().name} starting")
 
     for num in range(int(start), int(end) + 1):
         i = str(num).rjust(6, "0")
         if (int(i[0]) + int(i[1]) + int(i[2])) == (int(i[3]) + int(i[4]) + int(i[5])):
             lucky += 1
 
-    logging.info("Thread %s: finishing", threading.currentThread().name)
-
-    print(f"{threading.currentThread().name} - {lucky} tickets")
+    # logging.info("Thread %s: finishing", threading.currentThread().name)
+    # print(f"{threading.currentThread().name} - {lucky} tickets")
+    print(f"{current_process().name} finishing - {lucky} tickets")
 
     global total_tickets
     total_tickets += lucky
@@ -34,7 +37,8 @@ if __name__ == '__main__':
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
 
-    logging.info("Main: before creating thread")
+    logging.info("Main: before creating thread/process")
+
     # thread1 = threading.Thread(target=check_ticket, args=(tickets_1,))
     # thread2 = threading.Thread(target=check_ticket, args=(tickets_2,))
     # thread3 = threading.Thread(target=check_ticket, args=(tickets_3,))
@@ -45,7 +49,7 @@ if __name__ == '__main__':
     process3 = Process(target=check_ticket, args=(tickets_3,))
     process4 = Process(target=check_ticket, args=(tickets_4,))
 
-    logging.info("Main: before running thread")
+    logging.info("Main: before running thread/process")
     beginning_time = time.time()
     print(f"Begin threads {beginning_time}")
 
@@ -59,7 +63,7 @@ if __name__ == '__main__':
     process3.start()
     process4.start()
 
-    logging.info("Main: wait for the thread to finish")
+    logging.info("Main: wait for the thread/process to finish")
 
     # thread1.join()
     # thread2.join()
@@ -72,7 +76,7 @@ if __name__ == '__main__':
     process4.join()
 
     ending_time = time.time()
-    print(f"End threads {ending_time}")
+    print(f"End time {ending_time}")
     logging.info("Main: all done")
 
     print("Total lucky tickets: ", total_tickets)
