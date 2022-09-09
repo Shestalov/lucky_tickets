@@ -8,6 +8,7 @@ tickets_2 = ["250001", "500000"]
 tickets_3 = ["500001", "750000"]
 tickets_4 = ["750001", "999999"]
 
+
 # for th
 # total_tickets_th = 0
 
@@ -38,13 +39,10 @@ def check_ticket(ticket):
     # global total_tickets_th
     # total_tickets_th += lucky
 
-    # # for mp
-
     print(f"Lucky tickets: {lucky}")
 
 
 if __name__ == '__main__':
-
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
 
@@ -93,12 +91,3 @@ if __name__ == '__main__':
 
     # for th
     # print("Total lucky tickets th: ", total_tickets_th)
-
-    # for mp
-
-    # total_tickets_mp = 0
-    # while not queue.empty():
-    # total_tickets_mp += queue.get()
-    # print('item no: ', queue.get())
-    # print("Total lucky tickets mp: ", total_tickets_mp)
-
