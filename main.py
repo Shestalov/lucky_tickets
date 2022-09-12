@@ -1,7 +1,8 @@
 import logging
 import threading
 import time
-from multiprocessing import Process, current_process, Queue
+from multiprocessing import Process, current_process
+import multiprocessing
 
 tickets_1 = ["000000", "250000"]
 tickets_2 = ["250001", "500000"]
@@ -12,8 +13,7 @@ tickets_4 = ["750001", "999999"]
 # for th
 # total_tickets_th = 0
 
-
-def check_ticket(ticket):
+def check_ticket(ticket, return_dict):
     start = ticket[0]
     end = ticket[1]
     lucky = 0
@@ -40,6 +40,7 @@ def check_ticket(ticket):
     # total_tickets_th += lucky
 
     print(f"Lucky tickets: {lucky}")
+    return_dict[start] = lucky
 
 
 if __name__ == '__main__':
@@ -52,11 +53,20 @@ if __name__ == '__main__':
     # thread3 = threading.Thread(target=check_ticket, args=(tickets_3,))
     # thread4 = threading.Thread(target=check_ticket, args=(tickets_4,))
 
+    manager = multiprocessing.Manager()
+    return_dict = manager.dict()
+    lucky_tickets = []
+
     logging.info("Main: before creating process")
-    process1 = Process(target=check_ticket, args=(tickets_1,))
-    process2 = Process(target=check_ticket, args=(tickets_2,))
-    process3 = Process(target=check_ticket, args=(tickets_3,))
-    process4 = Process(target=check_ticket, args=(tickets_4,))
+    process1 = Process(target=check_ticket, args=(tickets_1, return_dict))
+    process2 = Process(target=check_ticket, args=(tickets_2, return_dict))
+    process3 = Process(target=check_ticket, args=(tickets_3, return_dict))
+    process4 = Process(target=check_ticket, args=(tickets_4, return_dict))
+
+    lucky_tickets.append(process1)
+    lucky_tickets.append(process2)
+    lucky_tickets.append(process3)
+    lucky_tickets.append(process4)
 
     logging.info("Main: before running thread/process")
     beginning_time = time.time()
@@ -79,10 +89,9 @@ if __name__ == '__main__':
     # thread3.join()
     # thread4.join()
 
-    process1.join()
-    process2.join()
-    process3.join()
-    process4.join()
+    for ticket in lucky_tickets:
+        ticket.join()
+    print("Total lucky tickets: ", sum(return_dict.values()))
 
     ending_time = time.time()
     print(f"End time {ending_time}")
